@@ -1,0 +1,60 @@
+@import "tailwindcss";
+
+:root {
+  --void: #05070d;
+  --deep: #0a1128;
+  --deep2: #0f1a38;
+  --ink: #0d1120;
+  --paper: #f4f5f8;
+  --card: #e8eaef;
+  --line-l: #d9dce3;
+  --line-d: rgba(255, 255, 255, 0.1);
+  --muted: #5b6272;
+  --muted-d: #97a0b8;
+  --white: #f5f7fb;
+  --blue: #1d4ed8;
+  --blue-soft: #7c9bff;
+  --ember: #ff5a3c;
+  --ember-soft: #ff8a6a;
+}
+
+@theme inline {
+  --color-void: var(--void);
+  --color-deep: var(--deep);
+  --color-deep2: var(--deep2);
+  --color-ink: var(--ink);
+  --color-paper: var(--paper);
+  --color-card: var(--card);
+  --color-line-l: var(--line-l);
+  --color-line-d: var(--line-d);
+  --color-muted: var(--muted);
+  --color-muted-d: var(--muted-d);
+  --color-white-soft: var(--white);
+  --color-blue: var(--blue);
+  --color-blue-soft: var(--blue-soft);
+  --color-ember: var(--ember);
+  --color-ember-soft: var(--ember-soft);
+  --font-body: var(--font-body);
+  --font-display: var(--font-display);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-display), sans-serif;
+  letter-spacing: -0.01em;
+}
+
+::selection {
+  background: var(--blue);
+  color: #fff;
+}
