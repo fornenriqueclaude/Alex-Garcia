@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { motion, useScroll, useSpring } from "framer-motion";
 import { GOOGLE_FORM_VIEW, INSTAGRAM_URL } from "@/lib/datos";
 
 const LINKS = [
@@ -15,12 +16,30 @@ const LINKS = [
 export function Nav() {
   const [solid, setSolid] = useState(false);
   const [open, setOpen] = useState(false);
+  const [active, setActive] = useState("#inicio");
+  const { scrollYProgress } = useScroll();
+  const progress = useSpring(scrollYProgress, { stiffness: 200, damping: 40 });
 
   useEffect(() => {
     const onScroll = () => setSolid(window.scrollY > 40);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // resalta el enlace de la sección que ocupa el centro de la pantalla
+  useEffect(() => {
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) if (e.isIntersecting) setActive(`#${e.target.id}`);
+      },
+      { rootMargin: "-50% 0px -50% 0px" },
+    );
+    LINKS.forEach((l) => {
+      const el = document.querySelector(l.href);
+      if (el) io.observe(el);
+    });
+    return () => io.disconnect();
   }, []);
 
   useEffect(() => {
@@ -32,15 +51,19 @@ export function Nav() {
       <header
         className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
           solid
-            ? "bg-void/95 border-b border-line-d py-3"
+            ? "bg-void/85 border-b border-line-d py-3 backdrop-blur-xl"
             : "bg-gradient-to-b from-void/80 to-transparent py-5"
         }`}
       >
+        <motion.div
+          style={{ scaleX: progress }}
+          className="absolute inset-x-0 bottom-0 h-[2px] origin-left bg-gradient-to-r from-blue via-blue-soft to-ember"
+        />
         <div className="mx-auto flex max-w-6xl items-center justify-between px-5 sm:px-8">
           <a href="#inicio" className="flex items-center gap-2.5">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/assets/logo-ag.png"
+              src={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/assets/logo-ag.png`}
               alt="AG — Alex García"
               className="h-9 w-9 rounded-lg shadow-[0_0_16px_rgba(29,78,216,0.55)]"
             />
@@ -49,14 +72,23 @@ export function Nav() {
             </span>
           </a>
 
-          <nav className="hidden items-center gap-6 lg:flex">
+          <nav className="hidden items-center gap-1 rounded-full border border-white/10 bg-white/[0.03] p-1 backdrop-blur-md lg:flex">
             {LINKS.map((l) => (
               <a
                 key={l.href}
                 href={l.href}
-                className="text-[13px] font-medium text-muted-d transition-colors hover:text-white-soft"
+                className={`relative rounded-full px-3.5 py-1.5 text-[13px] font-medium transition-colors ${
+                  active === l.href ? "text-white-soft" : "text-muted-d hover:text-white-soft"
+                }`}
               >
-                {l.label}
+                {active === l.href && (
+                  <motion.span
+                    layoutId="nav-active"
+                    className="absolute inset-0 rounded-full bg-white/10"
+                    transition={{ type: "spring", stiffness: 380, damping: 32 }}
+                  />
+                )}
+                <span className="relative">{l.label}</span>
               </a>
             ))}
           </nav>
@@ -115,7 +147,7 @@ export function Nav() {
           <div className="flex items-center gap-2.5">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/assets/logo-ag.png"
+              src={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/assets/logo-ag.png`}
               alt="AG — Alex García"
               className="h-8 w-8 rounded-lg shadow-[0_0_14px_rgba(29,78,216,0.5)]"
             />

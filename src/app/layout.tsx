@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { Manrope, Space_Grotesk } from "next/font/google";
+import { Anton, Manrope, Space_Grotesk } from "next/font/google";
+import { SmoothScroll } from "@/components/SmoothScroll";
 import "./globals.css";
 
 const manrope = Manrope({
@@ -12,6 +13,12 @@ const spaceGrotesk = Space_Grotesk({
   variable: "--font-display",
   subsets: ["latin"],
   weight: ["500", "600", "700"],
+});
+
+const anton = Anton({
+  variable: "--font-poster",
+  subsets: ["latin", "latin-ext"],
+  weight: "400",
 });
 
 export const metadata: Metadata = {
@@ -35,8 +42,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es">
-      <body className={`${manrope.variable} ${spaceGrotesk.variable}`}>
+      <body className={`${manrope.variable} ${spaceGrotesk.variable} ${anton.variable}`}>
+        <SmoothScroll />
         {children}
+        <div className="grain" aria-hidden />
+
       </body>
     </html>
   );
